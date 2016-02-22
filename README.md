@@ -1,4 +1,4 @@
-# Runup::Sms
+# Runup::SMS
 
 依赖Rails.cache
 

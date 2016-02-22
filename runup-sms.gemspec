@@ -5,7 +5,7 @@ require 'runup/sms/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "runup-sms"
-  spec.version       = Runup::Sms::VERSION
+  spec.version       = Runup::SMS::VERSION
   spec.authors       = ["david"]
   spec.email         = ["davidqhr@gmail.com"]
 
