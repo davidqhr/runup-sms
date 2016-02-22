@@ -43,8 +43,12 @@ module Runup
       # Runup::SMS.send_sms(mobile_number, code, {
       #   ... 其他参数
       # })
-      def send_sms mobile_number, code = generate_code, params = {}
+      def send_sms mobile_number, code = nil, params = {}
         mobile_number = mobile_number.to_s
+
+        if code.nil?
+          code = generate_code
+        end
 
         unless mobile_number =~ /^1[3|4|5|7|8]\d{9}$/
           return { success: false, error: '请输入正确的手机号码', error_type: 'illegal_mobile_number' }
@@ -56,7 +60,7 @@ module Runup
 
         result = {
           success: true,
-          data: @send_block.call(mobile_number, params)
+          data: @send_block.call(mobile_number, code, params)
         }
 
         if retry_limit > 0
