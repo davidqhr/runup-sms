@@ -14,8 +14,15 @@ module Runup
       raise '请设置send_block'
     end
 
+    @debug = false
+    @debug_code = '123456'
+
     class << self
       attr_accessor :retry_limit, :expires
+
+      # 设置是否为debug和debug_code
+      # 在debug模式下，默认产生的所有验证码都为debug_code
+      attr_accessor :debug, :debug_code
 
       # 设置生成code规则
       # Runup::SMS.set_generate_code_block do
@@ -28,7 +35,7 @@ module Runup
       # 生成一个code
       # Runup::SMS.generate_code
       def generate_code
-        @generate_code_block.call
+        debug ? debug_code : @generate_code_block.call
       end
 
       # 自定义设置如何发送
@@ -40,10 +47,13 @@ module Runup
       end
 
       # 发送验证码，传参格式同自定义的set_send_block, 默认为mobile_number, code, params
-      # Runup::SMS.send_sms(mobile_number, code, {
+      # Runup::SMS.send_sms(mobile_number, param: {
       #   ... 其他参数
       # })
-      def send_sms mobile_number, code = nil, params = {}
+      # Runup::SMS.send_sms(mobile_number, code: 123, param: {
+      #   ... 其他参数
+      # })
+      def send_sms mobile_number, code: nil, params: {}
         mobile_number = mobile_number.to_s
 
         if code.nil?
@@ -78,7 +88,6 @@ module Runup
         input_code = input_code.to_s
         mobile_number = mobile_number.to_s
         cache_code = Rails.cache.read(code_cache_key(mobile_number))
-
         if cache_code.nil?
           return false
         end

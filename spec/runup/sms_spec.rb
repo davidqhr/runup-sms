@@ -41,14 +41,14 @@ describe Runup::SMS do
       'ok'
     end
 
-    result = Runup::SMS.send_sms('13000000000', '321', {})
+    result = Runup::SMS.send_sms('13000000000', code: '321')
     expect(result[:data]).to eq('ok')
     expect(Runup::SMS.check_code('18000000000', nil)).to eq(false)
     expect(Runup::SMS.check_code('13000000000', '321')).to eq(true)
   end
 
   it 'illegal_mobile_number' do
-    result = Runup::SMS.send_sms('wrong_mobile_number', '321', {})
+    result = Runup::SMS.send_sms('wrong_mobile_number', code: '321')
 
     expect(result[:success]).to eq(false)
     expect(result[:error_type]).to eq('illegal_mobile_number')
@@ -59,13 +59,30 @@ describe Runup::SMS do
       'ok'
     end
 
-    result = Runup::SMS.send_sms('18000000000', '321', {})
+    result = Runup::SMS.send_sms('18000000000', code: '321')
     expect(result[:data]).to eq('ok')
     expect(Runup::SMS.check_code('18000000000', '321')).to eq(true)
 
-    result = Runup::SMS.send_sms('18000000000', '321', {})
+    result = Runup::SMS.send_sms('18000000000', code: '321')
     expect(result[:success]).to eq(false)
     expect(result[:error_type]).to eq('retry_limit')
     expect(Runup::SMS.check_code('18000000000', '321')).to eq(true)
+  end
+
+  it 'default code should not be used when set special code' do
+    Runup::SMS.debug = true
+    result = Runup::SMS.send_sms('17000000000', code: '321')
+    expect(result[:data]).to eq('ok')
+    expect(Runup::SMS.check_code('17000000000', '321')).to eq(true)
+  end
+
+  it 'default code should be used when not a special code' do
+    Runup::SMS.debug = true
+    Runup::SMS.debug_code = '333333'
+
+    result = Runup::SMS.send_sms('18000000001')
+    expect(result[:data]).to eq('ok')
+    puts result.inspect
+    expect(Runup::SMS.check_code('18000000001', '333333')).to eq(true)
   end
 end

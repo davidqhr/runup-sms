@@ -45,7 +45,8 @@ Runup::SMS.generate_code
 
 ```ruby
 # 发送验证码，传参格式同自定义的set_send_block, 默认为mobile_number, code, params
-Runup::SMS.send_sms(mobile_number, code, {
+# 注意 传参规则是ruby 2.0之后的规则
+Runup::SMS.send_sms(mobile_number, code: code, params: {
   ... 其他参数
 })
 ```
