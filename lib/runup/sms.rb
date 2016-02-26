@@ -70,7 +70,7 @@ module Runup
 
         result = {
           success: true,
-          data: @send_block.call(mobile_number, code, params)
+          data: @debug ? "debug send ok" : @send_block.call(mobile_number, code, params)
         }
 
         if retry_limit > 0
