@@ -1,3 +1,9 @@
+# 已经不会在维护
+
+请使用
+
+https://github.com/davidqhr/sms_ctrl
+
 # Runup::SMS
 
 依赖Rails.cache
